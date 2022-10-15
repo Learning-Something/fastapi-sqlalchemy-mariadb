@@ -1,0 +1,25 @@
+version: '3'
+services:
+  alaya_todo_list:
+    build: .
+    container_name: alaya_todo_list
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/code
+    depends_on:
+      - alaya_mysql
+    env_file:
+      - .env
+  alaya_mysql:
+    image: mariadb
+    container_name: alaya_mysql
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: todo_list
+        MYSQL_USER: todo_list
+        MYSQL_PASSWORD: todo_list
+    volumes:
+        - ./.ignore/mysql:/var/lib/mysql
