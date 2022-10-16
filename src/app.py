@@ -1,3 +1,4 @@
+from database import start_db
 from fastapi import FastAPI
 from fastapi_pagination import add_pagination
 from settings import APPLICATION_NAME, SERVERS
@@ -9,5 +10,9 @@ def create_app():
     # init_middlewares(app)
     # init_routes(app)
     add_pagination(app)
+
+    @app.on_event('startup')
+    async def startup():
+        await start_db()
 
     return app

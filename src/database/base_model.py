@@ -1,10 +1,10 @@
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy.ext.declarative import as_declarative, declared_attr
 
 
 @as_declarative()
 class ORMBaseModel:
-    id = Column(String, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     created_at = Column(DateTime())
     updated_at = Column(DateTime())
     __name__: str

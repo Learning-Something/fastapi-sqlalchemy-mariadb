@@ -22,4 +22,5 @@ services:
         MYSQL_USER: todo_list
         MYSQL_PASSWORD: todo_list
     volumes:
-        - ./.ignore/mysql:/var/lib/mysql
+      - ./.ignore/mysql:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d

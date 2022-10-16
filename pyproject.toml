@@ -27,7 +27,9 @@ pylint-pydantic = "^0.1.4"
 mypy = "^0.982"
 sqlalchemy2-stubs = "^0.0.2a29"
 debugpy = "^1.6.3"
-pytest-async-sqlalchemy = "^0.2.0"
+asgi-lifespan = "^1.0.1"
+httpx = "^0.23.0"
+pytest-env = "^0.6.2"
 
 [build-system]
 requires = ["poetry-core"]

@@ -21,8 +21,8 @@ def upgrade():
     op.create_table(
         "todo",
         sa.Column("id", mysql.INTEGER(), primary_key=True),
-        sa.Column("title", sa.VARCHAR(), nullable=False, unique=False),
-        sa.Column("description", sa.VARCHAR(), nullable=True),
+        sa.Column("title", sa.VARCHAR(50), nullable=False, unique=False),
+        sa.Column("description", sa.VARCHAR(255), nullable=True),
         sa.Column("created_at", sa.DATETIME(), nullable=True),
         sa.Column("updated_at", sa.DATETIME(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
