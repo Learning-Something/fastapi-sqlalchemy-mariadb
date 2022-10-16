@@ -1,10 +1,12 @@
-from pydantic import BaseModel
+from interfaces.schemas import BaseModel
+from pydantic import BaseModel as PydanticBaseModel
 
 
 class TodoSchema(BaseModel):
-    id: int | None = None
     title: str
     description: str | None = None
 
-    class Config:
-        orm_mode = True
+
+class PartialTodoSchema(PydanticBaseModel):
+    title: str | None = None
+    description: str | None = None
