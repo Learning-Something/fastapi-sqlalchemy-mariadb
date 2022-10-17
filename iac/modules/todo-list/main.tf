@@ -6,7 +6,7 @@ module "ecs" {
   spot = true
   ecs_cpu = 256
   ecs_memory = 512
-  image = "nereswe/todo-list:latest"
+  image = "854605138489.dkr.ecr.us-east-2.amazonaws.com/nereswe/todo-list:latest"
   container_port = 5000
   container_env = [
     {
