@@ -12,9 +12,10 @@ Schema = TypeVar('Schema', bound='BaseModel')
 class RepositoryInterface(Generic[Schema], ABC):
     db_session: AsyncSession
 
-    def _check_rows(self, result):
-        if result.rowcount == 0:
-            raise ValueError("Todo not found")
+    def _check_rows(self, result, expected_rows=1):
+        if result.rowcount == expected_rows:
+            return True
+        return False
 
     @abstractmethod
     async def get_all(self, params: Params) -> Page[Schema]:

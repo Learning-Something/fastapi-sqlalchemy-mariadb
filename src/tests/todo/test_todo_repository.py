@@ -1,3 +1,5 @@
+import pytest
+from packages.todo.exceptions import TodoNotFound
 from packages.todo.repository import TodoRepository
 from packages.todo.schemas import PartialTodoSchema
 
@@ -23,10 +25,10 @@ class TestTodoRepository:
         assert todo.description == new_todo.description
 
     async def test_get_by_id_not_found(self, todo_repository: TodoRepository):
-        try:
+        with pytest.raises(TodoNotFound) as ex:
             await todo_repository.get_by_id(1)
-        except ValueError as e:
-            assert str(e) == 'Todo not found'
+        assert ex.value.code == 404
+        assert ex.value.message == 'Todo with id 1 not found'
 
     async def test_create(self, todo_repository: TodoRepository):
         new_todo = PartialTodoSchema(title='test', description='test')
@@ -45,10 +47,10 @@ class TestTodoRepository:
         assert todo_updated.description == 'test2'
 
     async def test_update_not_found(self, todo_repository: TodoRepository):
-        try:
+        with pytest.raises(TodoNotFound) as ex:
             await todo_repository.update(1, PartialTodoSchema(title='test2', description='test2'))
-        except ValueError as e:
-            assert str(e) == 'Todo not found'
+        assert ex.value.code == 404
+        assert ex.value.message == 'Todo with id 1 not found'
 
     async def test_delete(self, todo_repository: TodoRepository):
         new_todo = PartialTodoSchema(title='test', description='test')
@@ -58,7 +60,7 @@ class TestTodoRepository:
         assert todos.total == 0
 
     async def test_delete_not_found(self, todo_repository: TodoRepository):
-        try:
+        with pytest.raises(TodoNotFound) as ex:
             await todo_repository.delete(1)
-        except ValueError as e:
-            assert str(e) == 'Todo not found'
+        assert ex.value.code == 404
+        assert ex.value.message == 'Todo with id 1 not found'

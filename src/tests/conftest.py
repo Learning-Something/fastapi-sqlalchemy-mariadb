@@ -3,7 +3,6 @@ import sys
 import traceback
 
 import pytest
-import pytest_asyncio
 from app import create_app
 from asgi_lifespan import LifespanManager
 from database.base_model import ORMBaseModel
@@ -67,7 +66,7 @@ async def transaction(_engine):
         await conn.rollback()
 
 
-@pytest_asyncio.fixture(scope='function', autouse=True)
+@pytest.fixture(scope='function', autouse=True)
 async def server():
     try:
         app = create_app()
@@ -81,7 +80,7 @@ async def server():
         pass
 
 
-@pytest_asyncio.fixture(scope='function')
+@pytest.fixture(scope='function')
 async def client(server):  # pylint: disable=redefined-outer-name
     async with AsyncClient(app=server, base_url='http://test') as _client:
         yield _client

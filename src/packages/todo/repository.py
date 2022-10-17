@@ -7,6 +7,7 @@ from interfaces.repository import RepositoryInterface
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.exc import NoResultFound
 
+from .exceptions import TodoNotFound
 from .schemas import PartialTodoSchema, TodoSchema
 
 
@@ -28,13 +29,13 @@ class TodoRepository(RepositoryInterface[TodoSchema]):
             print('todo', vars(todo))
             return TodoSchema.from_orm(todo)
         except NoResultFound as ex:
-            raise ValueError("Todo not found") from ex
+            raise TodoNotFound(schema_id) from ex
 
     async def create(self, schema: PartialTodoSchema):
         todo_query = insert(Todo).values(**schema.dict())
         todo_id = await self.db_session.execute(todo_query)
         await self.db_session.commit()
-        return await self.get_by_id(todo_id.inserted_primary_key[0])
+        return await self.get_by_id(todo_id.inserted_primary_key[0])  # type: ignore
 
     async def update(self, schema_id: int, schema: PartialTodoSchema):
         todo_query = (
@@ -42,13 +43,13 @@ class TodoRepository(RepositoryInterface[TodoSchema]):
         )
         todo = await self.db_session.execute(todo_query)
         await self.db_session.commit()
-        if self._check_rows(todo):
-            raise ValueError("Todo not found")
+        if not self._check_rows(todo):
+            raise TodoNotFound(schema_id)
         return await self.get_by_id(schema_id)
 
     async def delete(self, schema_id: int):
         todo_query = delete(Todo).where(Todo.id == schema_id)
         result = await self.db_session.execute(todo_query)
-        if self._check_rows(result):
-            raise ValueError("Todo not found")
+        if not self._check_rows(result):
+            raise TodoNotFound(schema_id)
         await self.db_session.commit()
