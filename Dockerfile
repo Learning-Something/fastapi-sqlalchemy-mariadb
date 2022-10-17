@@ -30,7 +30,8 @@ RUN apt-get install libmariadb3 libmariadb-dev -yy
 RUN mkdir /code
 WORKDIR /code
 
-COPY pyproject.toml poetry.lock .
+COPY pyproject.toml .
+COPY poetry.lock .
 
 RUN pip install --no-cache -U poetry && poetry config virtualenvs.create false
 RUN poetry install --no-interaction --no-ansi -vvv
