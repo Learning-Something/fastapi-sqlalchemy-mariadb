@@ -1,0 +1,84 @@
+name: Tests and Sonar
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  tests:
+    name: Tests
+    env:
+      PYTHON_VERSION: '3.10.7' # Precisa ser a versão completa, conferir as disponíveis aqui https://github.com/actions/python-versions/releases
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Install host dependencies
+        run: sudo apt update && sudo apt-get install -y locales locales-all libcurl4-openssl-dev libssl-dev
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
+          key: python${{ env.PYTHON_VERSION }}-${{ runner.os }}-requirements-${{ hashFiles('requirements.txt') }}
+      - name: Install Dependencies
+        run: |
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi -vvv
+      - name: Tests
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_TESTS }}
+        run: |
+          echo Installing Doppler
+          (curl -Ls https://cli.doppler.com/install.sh || wget -qO- https://cli.doppler.com/install.sh) | sudo bash
+          echo Doppler Installed
+          echo Running Tests
+          doppler run -- pytest src --cov --cov-report xml:coverage.xml
+      - name: Upload coverage to the next step
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-${{ github.run_id }}
+          path: coverage.xml
+  sonar:
+    name: Sonar
+    env:
+      SONAR_VERSION: '4.7.0.2747'
+    needs: tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Sonar Cache
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/sonar-scanner
+          key: sonar-scanner-${{ runner.os }}-${{ runner.arch }}-${{ env.SONAR_VERSION }}
+      - name: Setup sonarqube
+        uses: warchant/setup-sonar-scanner@v3
+        with:
+          version: ${{ env.SONAR_VERSION }}
+      - name: Download coverage
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-${{ github.run_id }}
+          path: .
+      - name: SonarQube Scan
+        run: sonar-scanner -Dsonar.projectBaseDir=.
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      - name: Sonar Check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+        continue-on-error: true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
