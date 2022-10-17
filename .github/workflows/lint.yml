@@ -1,0 +1,49 @@
+name: Lint
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+
+jobs:
+  pre_commit_run:
+    name: Run Pre-commit
+    env:
+      PYTHON_VERSION: '3.10.7' # Precisa ser a versão completa, conferir as disponíveis aqui https://github.com/actions/python-versions/releases
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Cache pip
+        uses: actions/cache@v3
+        with:
+          path: /opt/hostedtoolcache/Python/${{ env.PYTHON_VERSION }}/x64/
+          key: python${{ env.PYTHON_VERSION }}-${{ runner.os }}-requirements-${{ hashFiles('requirements.txt') }}
+      - name: Install and configure Pre-commit
+        run: |
+          pip install pre-commit pylint pylint-django pylint-plugin-utils pylint-pydantic
+          pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi -vvv
+      - name: Cache pre commit hooks
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pre-commit
+          key: ${{ runner.os }}-pre-commit-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('.github/workflows/lint.yml') }}
+      - name: Cache mypy types
+        uses: actions/cache@v3
+        with:
+          path: .mypy_cache
+          key: ${{ runner.os }}-mypy-${{ hashFiles('.pre-commit-config.yaml') }}-${{ hashFiles('mypy.ini') }}
+      - name: Run Pre-commit
+        run: |
+          pre-commit run --from-ref origin/${{ github.event.pull_request.base.ref }} --to-ref HEAD

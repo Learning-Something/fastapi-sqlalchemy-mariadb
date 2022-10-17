@@ -2,6 +2,16 @@
 
 This is a simple todo list application using SQLAlchemy and MariaDB.
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Learning-Something_fastapi-sqlalchemy-mariadb&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Learning-Something_fastapi-sqlalchemy-mariadb)
+
 ## Technologies
 
 - [FastAPI](https://fastapi.tiangolo.com/) - FastAPI is a modern, fast (high-performance), web framework for building APIs with Python 3.6+ based on standard Python type hints.
