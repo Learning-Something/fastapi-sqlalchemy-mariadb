@@ -9,13 +9,6 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    env:
-      IMAGE_NAME: nereswe/todo-list
-      IMAGE_TAG: latest
-    outputs:
-      registry: ${{ steps.login-ecr.outputs.registry }}
-      user: ${{ steps.login-ecr.outputs.docker_username_071032557399_dkr_ecr_sa_east_1_amazonaws_com }}
-      pass: ${{ steps.ecr.outputs.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -26,12 +19,14 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-2
           mask-aws-account-id: 'no'
-      - name: Login to Amazon ECR Public
-        id: login-ecr-public
+      - name: Login to Amazon ECR
+        id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
-        with:
-          registry-type: public
-      - name: Build, tag, and push docker image to Amazon ECR Public
+      - name: Build, tag, and push docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: nereswe/todo-list
+          IMAGE_TAG: latest
         run: |
-          docker build -t public.ecr.aws/o3d2n3f9/nereswe/todo-list:latest .
-          docker push public.ecr.aws/o3d2n3f9/nereswe/todo-list:latest
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
