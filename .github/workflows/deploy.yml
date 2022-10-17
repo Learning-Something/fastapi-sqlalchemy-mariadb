@@ -1,0 +1,37 @@
+name: Production Workflow
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: nereswe/todo-list
+      IMAGE_TAG: latest
+    outputs:
+      registry: ${{ steps.login-ecr.outputs.registry }}
+      user: ${{ steps.login-ecr.outputs.docker_username_071032557399_dkr_ecr_sa_east_1_amazonaws_com }}
+      pass: ${{ steps.ecr.outputs.token }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-2
+          mask-aws-account-id: 'no'
+      - name: Login to Amazon ECR Public
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          registry-type: public
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        run: |
+          docker build -t public.ecr.aws/o3d2n3f9/nereswe/todo-list:latest .
+          docker push public.ecr.aws/o3d2n3f9/nereswe/todo-list:latest
