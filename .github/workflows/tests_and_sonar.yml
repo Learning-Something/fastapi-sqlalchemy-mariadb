@@ -15,6 +15,17 @@ jobs:
       PYTHON_VERSION: '3.10.7' # Precisa ser a versão completa, conferir as disponíveis aqui https://github.com/actions/python-versions/releases
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.9
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: todo_list
+          MYSQL_PASSWORD: todo_list
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
