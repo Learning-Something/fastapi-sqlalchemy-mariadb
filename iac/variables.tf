@@ -18,16 +18,6 @@ variable "environment" {
   type = string
 }
 
-variable "pgadmin_email" {
-  description = "The email address to use for the pgAdmin instance."
-  type = string
-}
-
-variable "pgadmin_password" {
-  description = "The password to use for the pgAdmin instance."
-  type = string
-}
-
 variable "doppler_token" {
   description = "The token to use for the Doppler instance."
   type = string
