@@ -16,8 +16,8 @@ if USE_DATABASE:
     )
 
 SERVERS = [
-    {'url': 'https://todo-list.staging.nereswe.com', 'description': 'Staging'},
     {'url': 'https://todo-list.nereswe.com', 'description': 'Production'},
+    {'url': 'https://todo-list.staging.nereswe.com', 'description': 'Staging'},
 ]
 
 if ENVIRONMENT == EnvironmentSet.DEVELOPMENT:

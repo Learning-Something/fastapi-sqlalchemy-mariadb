@@ -17,7 +17,6 @@ async def start_db():
     if ENVIRONMENT == EnvironmentSet.DEVELOPMENT:
         async with engine.begin() as conn:
             await conn.run_sync(ORMBaseModel.metadata.create_all)
-            await conn.run_sync(ORMBaseModel.metadata.create_all)
 
 
 async def session_db():

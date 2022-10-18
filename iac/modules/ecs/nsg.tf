@@ -22,10 +22,10 @@ resource "aws_security_group_rule" "nsg_task_ingress_rule" {
 
 # Rules for the TASK (Targets the RDs)
 resource "aws_security_group_rule" "nsg_task_to_rds_ingress_rule" {
-  description              = "Only allow connections from SG ${var.app}-${var.environment}-lb on port 5432"
+  description              = "Only allow connections from SG ${var.app}-${var.environment}-lb on port 3306"
   type                     = "ingress"
-  from_port                = "5432"
-  to_port                  = "5432"
+  from_port                = "3306"
+  to_port                  = "3306"
   protocol                 = "tcp"
   cidr_blocks              = ["0.0.0.0/0"]
 
